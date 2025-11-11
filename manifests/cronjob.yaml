@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: crawl
+spec:
+  timeZone: Asia/Tokyo
+  schedule: 5 0 * * * # At 00:05 every day
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: crawler
+            image: ghcr.io/anthrotech-dev/activity-crawl:latest
+            envFrom:
+            - secretRef:
+                name: crawler-secrets
+          restartPolicy: Never
+

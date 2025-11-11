@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: activity-db
+spec:
+  replicas: 1
+  serviceName: activity-db
+  selector:
+    matchLabels:
+      name: activity-db
+  template:
+    metadata:
+      labels:
+        name: activity-db
+    spec:
+      containers:
+        - name: posgresql
+          image: postgres:18-trixie
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+          volumeMounts:
+            - name: postgres-varlib
+              mountPath: /var/lib/postgresql
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-varlib
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 16Gi

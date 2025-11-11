@@ -1,0 +1,14 @@
+!yisp
+- lists.map
+- - include
+  - deployment.yaml
+  - statefulset.yaml
+  - secret.yaml
+  - cronjob.yaml
+  - service.yaml
+- - lambda
+  - [x]
+  - - maps.merge
+    - *x
+    - metadata:
+        namespace: at-activity
