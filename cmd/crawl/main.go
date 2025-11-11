@@ -72,11 +72,11 @@ func main() {
 
 	acts := []activity.Activity{}
 
-	discordActs, err := collectDiscord()
+	progressActs, err := collectDiscordProgress()
 	if err != nil {
 		log.Fatalf("Error collecting Discord activities: %v", err)
 	}
-	for _, act := range discordActs {
+	for _, act := range progressActs {
 		var anthrotech_id string
 		for _, u := range members {
 			if act.UserID == fmt.Sprintf("%d", u.Discord) {
@@ -85,6 +85,24 @@ func main() {
 			}
 		}
 
+		if anthrotech_id != "" {
+			act.UserID = anthrotech_id
+			acts = append(acts, act)
+		}
+	}
+
+	joinActs, err := collectJoin()
+	if err != nil {
+		log.Fatalf("Error collecting Discord join activities: %v", err)
+	}
+	for _, act := range joinActs {
+		var anthrotech_id string
+		for _, u := range members {
+			if act.UserID == fmt.Sprintf("%d", u.Discord) {
+				anthrotech_id = u.GitHub
+				break
+			}
+		}
 		if anthrotech_id != "" {
 			act.UserID = anthrotech_id
 			acts = append(acts, act)

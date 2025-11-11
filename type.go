@@ -8,4 +8,5 @@ type Activity struct {
 	Timestamp time.Time `json:"timestamp" gorm:"type:timestamp without time zone"`
 	Type      string    `json:"type" gorm:"type:text"`
 	Body      string    `json:"body" gorm:"type:text"`
+	IsSpecial bool      `json:"is_special" gorm:"type:boolean;default:false"`
 }

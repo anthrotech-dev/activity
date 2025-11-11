@@ -37,7 +37,7 @@ func snowflakeForTimeUTC(t time.Time) string {
 	return strconv.FormatInt(sf, 10)
 }
 
-func collectDiscord() ([]activity.Activity, error) {
+func collectDiscordProgress() ([]activity.Activity, error) {
 
 	token := os.Getenv("DISCORD_BOT_TOKEN")
 	channelID := "1381317464805085204"

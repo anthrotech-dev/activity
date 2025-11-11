@@ -15,8 +15,9 @@ import (
 )
 
 type DailyActivity struct {
-	Date  time.Time `json:"date"`
-	Count int       `json:"count"`
+	Date       *time.Time `json:"date,omitempty"`
+	Count      int        `json:"count"`
+	HasSpecial bool       `json:"has_special,omitempty"`
 }
 
 func main() {
@@ -71,15 +72,17 @@ func main() {
 		var results []DailyActivity
 		db.
 			Model(&activity.Activity{}).
-			Select("DATE(timestamp) as date, COUNT(*) as count").
+			Select("DATE(timestamp) as date, COUNT(*) as count, BOOL_OR(is_special) AS has_special").
 			Where("user_id = ? AND timestamp >= ? AND timestamp <= ?", id, since, until).
 			Group("date").
 			Order("date").
 			Scan(&results)
 
-		resultsMap := make(map[string]int)
+		resultsMap := make(map[string]DailyActivity)
 		for _, r := range results {
-			resultsMap[r.Date.Format("2006-01-02")] = r.Count
+			summary := r
+			summary.Date = nil
+			resultsMap[r.Date.Format("2006-01-02")] = summary
 		}
 
 		return c.JSON(200, resultsMap)
